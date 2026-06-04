@@ -1,58 +1,57 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { AuthProvider } from "@/lib/auth-context";
+import { AuthProvider }     from "@/lib/auth-context";
 import { SettingsProvider } from "@/lib/settings-context";
-import { Suspense } from "react";
+import { Suspense }         from "react";
 
-const geist     = Geist({ subsets: ["latin"], variable: "--font-geist" });
-const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
+const inter = Inter({
+  subsets:  ["latin"],
+  variable: "--font-inter",
+  display:  "swap",
+});
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://kedipotter-tracker.vercel.app";
 
-// SEO — Riot Games geliştirici programı kapsamındaki ürün için metadata
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
   title: {
-    default: "KediPotter Tracker · Valorant İstatistik Platformu",
-    template: "%s · KediPotter Tracker",
+    default:  "Che Tracker · Valorant Stats Platform",
+    template: "%s · Che Tracker",
   },
   description:
-    "Riot Games geliştirici kurallarına uyumlu Valorant istatistik ve rank takip platformu. Maç geçmişi, performans metrikleri ve leaderboard.",
+    "Professional Valorant statistics and rank tracking platform by Che-Software. Match history, performance metrics, leaderboard — Riot Games Developer Policy compliant.",
   keywords: [
-    "valorant tracker", "valorant stats", "valorant rank", "valorant istatistik",
-    "valorant leaderboard", "valorant match history", "kedipotter tracker",
+    "valorant tracker", "valorant stats", "valorant rank tracker",
+    "valorant match history", "che tracker", "che-software", "valorant leaderboard",
   ],
-  authors: [{ name: "KediPotter" }],
-  creator: "KediPotter",
+  authors: [{ name: "Che-Software" }],
+  creator: "Che-Software",
   openGraph: {
-    type: "website",
-    locale: "tr_TR",
-    url: APP_URL,
-    siteName: "KediPotter Tracker",
-    title: "KediPotter Tracker · Valorant İstatistik Platformu",
-    description: "Valorant oyuncuları için ücretsiz istatistik ve rank takip platformu.",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "KediPotter Tracker" }],
+    type:      "website",
+    locale:    "en_US",
+    url:       APP_URL,
+    siteName:  "Che Tracker",
+    title:     "Che Tracker · Valorant Stats Platform",
+    description: "Track your Valorant stats, rank, and match history — built by Che-Software.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Che Tracker" }],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "KediPotter Tracker · Valorant İstatistik Platformu",
-    description: "Valorant oyuncuları için ücretsiz istatistik ve rank takip platformu.",
-    images: ["/og-image.png"],
+    card:        "summary_large_image",
+    title:       "Che Tracker · Valorant Stats Platform",
+    description: "Track your Valorant stats, rank, and match history.",
+    images:      ["/og-image.png"],
   },
   robots: { index: true, follow: true },
-  // Riot Games Developer Policy gereği açık kaynak bildirimi
-  other: {
-    "riot-disclaimer": "Not affiliated with Riot Games",
-  },
+  other: { "riot-disclaimer": "Not affiliated with Riot Games" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="tr" className={`${geist.variable} ${geistMono.variable}`}>
-      <body className="min-h-screen antialiased font-[var(--font-geist)] flex flex-col">
+    <html lang="en" className={inter.variable}>
+      <body className="min-h-screen antialiased flex flex-col bg-[#0d1117]">
         <Suspense>
           <SettingsProvider>
             <AuthProvider>
