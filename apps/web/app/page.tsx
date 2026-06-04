@@ -37,8 +37,8 @@ const FEATURES = [
 
 // ── Small stat counters above the headline ───────────────────────────────────
 const STATS = [
-  { value: "10M+",  label: "Matches Tracked" },
-  { value: "500K+", label: "Players Profiled" },
+  { value: "5-20K", label: "Matches Tracked" },
+  { value: "15-20K", label: "Players Profiled" },
   { value: "99.9%", label: "API Uptime"       },
 ];
 
