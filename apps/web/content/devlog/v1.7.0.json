@@ -1,0 +1,25 @@
+{
+  "version": "v1.7.0",
+  "date": "2026-05-14T00:00:00Z",
+  "title": "RSO Entegrasyonu, Kullanıcı Paneli ve Özelleştirme",
+  "category": "security",
+  "published": true,
+  "items": [
+    { "text": "Riot Sign-On (RSO) OAuth2 akışı entegre edildi — /api/auth/riot/login, /callback, /session, /logout route'ları oluşturuldu", "status": "done" },
+    { "text": "Token exchange sunucu tarafında yapılıyor — Authorization: Basic header ile, client_secret hiçbir zaman tarayıcıya gönderilmiyor", "status": "done" },
+    { "text": "CSRF koruması eklendi — state parametresi httpOnly cookie ile doğrulanıyor", "status": "done" },
+    { "text": "CSP (Content Security Policy) güncellendi — connect-src'ye auth.riotgames.com ve Riot API endpoint'leri eklendi, form-action direktifi eklendi", "status": "done" },
+    { "text": "CORS hatası giderildi — Sign in butonu Next.js Link yerine window.location.href ile hard redirect yapıyor", "status": "done" },
+    { "text": "AuthProvider (React Context) eklendi — tüm sayfalarda oturum durumu paylaşılıyor, sayfa geçişlerinde session kapanmıyor", "status": "done" },
+    { "text": "Navbar'a profil dropdown eklendi — giriş yapılmışsa profil kartı (PP), seviye badge'i, rank ikonu ve RR gösteriliyor", "status": "done" },
+    { "text": "Giriş sonrası HenrikDev API'den level, profil kartı ve rank bilgisi çekiliyor — puuid fallback mekanizması eklendi", "status": "done" },
+    { "text": "Çıkış yapınca arama geçmişi ve session verileri temizleniyor, tema/dil tercihi korunuyor", "status": "done" },
+    { "text": "Ayarlar sayfası (/settings) oluşturuldu — Dil seçimi (Türkçe / English / Deutsch) ve Tema seçimi (Koyu / Daha Koyu / Gece Yarısı / Kırmızı)", "status": "done" },
+    { "text": "i18n (çoklu dil) desteği eklendi — SettingsProvider ile tüm Navbar metinleri seçilen dile göre anlık değişiyor", "status": "done" },
+    { "text": "Tema sistemi eklendi — CSS değişkenleri (--bg-primary, --bg-secondary, --accent) ile tüm arka plan ve gradient anlık değişiyor", "status": "done" },
+    { "text": "openid + account scope'u eklendi — Riot userinfo'dan game_name ve tag_line alınıyor", "status": "done" },
+    { "text": "Contact form rate limiting güçlendirildi — IP başına 3/10dk, email başına 2/1saat, global 20/1dk; HTML injection koruması eklendi", "status": "done" },
+    { "text": "proxy.ts (Edge Middleware) yeniden yazıldı — burst + dakika bazlı çift katmanlı rate limit, admin endpoint koruması", "status": "done" },
+    { "text": "İstatistiklerim butonu /stats/me route'una bağlandı — giriş yapılmışsa kendi profil sayfasına yönlendiriyor", "status": "done" }
+  ]
+}

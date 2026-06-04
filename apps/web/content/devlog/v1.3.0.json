@@ -1,0 +1,14 @@
+{
+  "version": "v1.3.0",
+  "date": "2025-04-15T00:00:00Z",
+  "title": "Gelişmiş Analitik Modülü",
+  "category": "ui",
+  "published": true,
+  "items": [
+    { "text": "Performance Insights badge sistemi maç kartlarına eklendi", "status": "done" },
+    { "text": "Tilt Metre bileşeni eklendi — mental durum analizi", "status": "done" },
+    { "text": "Clutch Performansı paneli eklendi — 1v1'den 1v5'e senaryo analizi", "status": "done" },
+    { "text": "Duo Sinerji tablosu eklendi — birlikte oynanan oyuncu analizi", "status": "done" },
+    { "text": "Valorant resmi Leaderboard entegrasyonu tamamlandı", "status": "done" }
+  ]
+}

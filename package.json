@@ -1,0 +1,16 @@
+{
+  "name": "valorant-tracker-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Valorant Tracker — Next.js frontend + Express/Mongoose API",
+  "workspaces": [
+    "apps/web",
+    "apps/api"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev --workspace=apps/web",
+    "dev:api": "npm run dev --workspace=apps/api",
+    "build:web": "npm run build --workspace=apps/web",
+    "install:all": "npm install --workspace=apps/web && npm install --workspace=apps/api"
+  }
+}

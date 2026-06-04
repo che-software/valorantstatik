@@ -1,0 +1,20 @@
+{
+  "version": "v1.6.0",
+  "date": "2026-05-12T00:00:00Z",
+  "title": " UI/UX Yenileme",
+  "category": "ui",
+  "published": true,
+  "items": [
+    { "text": "Dashboard mimarisi yenilendi — PlayerHeader üstüne Peak Rank, Current Rank, Win Rate ve K/D özet kartı (StatsOverview) eklendi", "status": "done" },
+    { "text": "MatchCard tamamen yeniden yazıldı — harita adına göre Valorant API'den blur splash arka plan, sol tarafta galibiyet/mağlubiyet renk çizgisi", "status": "done" },
+    { "text": "Accordion detay paneli eklendi — maça tıklayınca Headshot %, KAST, ADR ve First Blood istatistikleri progress bar'larıyla açılıyor", "status": "done" },
+    { "text": "Atış dağılımı (Headshot / Body / Leg) segmented bar ile görselleştirildi", "status": "done" },
+    { "text": "Accordion içinde takım tablosu eklendi — her iki takımın oyuncuları ACS sıralı, Kill/Death/Assist ayrı renkli kolonlar (yeşil/kırmızı/mavi)", "status": "done" },
+    { "text": "KDA Trend grafiği eklendi — SVG tabanlı, sıfır ek kütüphane; Kill, Death, Assist ve K/D ayrı çizgiler, son 5 maça göre Yükseliş/Düşüş/Stabil trend badge'i", "status": "done" },
+    { "text": "Maç geçmişindeki oyuncu satırları tıklanabilir profile linki yapıldı — hover'da kırmızı vurgu, isim#tag tam görünür", "status": "done" },
+    { "text": "SearchBar'a arama geçmişi eklendi — localStorage tabanlı, max 8 kayıt, zaman damgası, tek tek veya toplu silme", "status": "done" },
+    { "text": "SkeletonLoader güncellendi — SkeletonStatsOverview bileşeni eklendi, SkeletonMatch gerçek MatchCard yapısını yansıtıyor", "status": "done" },
+    { "text": "Rajdhani + DM Sans fontları entegre edildi — Valorant resmi fontlarına yakın display/body font çifti", "status": "done" },
+    { "text": "globals.css'e glass-card-strong ve accordion animasyonu eklendi", "status": "done" }
+  ]
+}

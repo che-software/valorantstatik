@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Player {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  puuid       String        @unique
+  name        String
+  tag         String
+  region      String
+  level       Int           @default(0)
+  cardSmall   String        @default("")
+  tier        Int           @default(0)
+  tierName    String        @default("Unranked")
+  elo         Int           @default(0)
+  rr          Int           @default(0)
+  rrChange    Int           @default(0)
+  rankIconUrl String        @default("")
+  matchCount  Int           @default(0)
+  lastMatchAt DateTime?
+  updatedAt   DateTime      @updatedAt
+  createdAt   DateTime      @default(now())
+  matches     MatchRecord[]
+
+  @@index([elo])
+  @@index([name, tag])
+}
+
+model MatchRecord {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  matchId   String   @unique
+  puuid     String
+  map       String
+  mode      String
+  result    String   // "win" | "loss"
+  acs       Int
+  kills     Int
+  deaths    Int
+  assists   Int
+  agent     String
+  startedAt DateTime
+  rounds    Int
+  player    Player   @relation(fields: [puuid], references: [puuid])
+
+  @@index([puuid, startedAt])
+}
+
+model AgentStats {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  puuid     String
+  agent     String
+  played    Int      @default(0)
+  wins      Int      @default(0)
+  avgAcs    Float    @default(0)
+  avgKd     Float    @default(0)
+  updatedAt DateTime @updatedAt
+
+  @@unique([puuid, agent])
+}
+
+model DevlogEntry {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  version   String   @unique
+  date      DateTime
+  title     String
+  category  String
+  items     Json
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+// RSO onayı alındığında kullanılacak — şu an Production API başvurusu devam ediyor
+model UserConsent {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  puuid       String    @unique
+  riotId      String
+  isOptedIn   Boolean   @default(false)
+  optInDate   DateTime?
+  optOutDate  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}

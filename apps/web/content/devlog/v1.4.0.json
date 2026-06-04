@@ -1,0 +1,14 @@
+{
+  "version": "v1.4.0",
+  "date": "2025-04-20T00:00:00Z",
+  "title": "Riot Production API Başvuru Hazırlıkları",
+  "category": "api",
+  "published": true,
+  "items": [
+    { "text": "riot.txt doğrulama dosyası public/ dizinine eklendi", "status": "done" },
+    { "text": "Riot Developer Policy uyumlu footer yasal metni güncellendi", "status": "done" },
+    { "text": "Privacy Policy sayfası oluşturuldu (/privacy)", "status": "done" },
+    { "text": "Rate limit hata yönetimi ve fallback mekanizması geliştirildi", "status": "done" },
+    { "text": "Production API başvurusu gönderildi", "status": "progress" }
+  ]
+}

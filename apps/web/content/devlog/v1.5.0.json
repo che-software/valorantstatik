@@ -1,0 +1,18 @@
+{
+  "version": "v1.5.0",
+  "date": "2025-04-26T00:00:00Z",
+  "title": "Enterprise Backend Mimarisi",
+  "category": "api",
+  "published": true,
+  "items": [
+    { "text": "CacheManager katmanı oluşturuldu — TTL tablosu tek yerden yönetiliyor", "status": "done" },
+    { "text": "RateLimiter middleware eklendi — IP başına 60s/30 istek sınırı", "status": "done" },
+    { "text": "MatchProcessor servisi yazıldı — transformer.ts üzerine clean wrapper", "status": "done" },
+    { "text": "StatsEngine servisi yazıldı — pure function, insufficient_data koruması", "status": "done" },
+    { "text": "RetryHandler eklendi — 429/500 için retry + Redis/MongoDB fallback zinciri", "status": "done" },
+    { "text": "ApiGateway servisi yazıldı — HenrikDev/Riot API soyutlama katmanı", "status": "done" },
+    { "text": "DevlogManager servisi yazıldı — JSON/Markdown tabanlı içerik yönetimi", "status": "done" },
+    { "text": "Route handler'lar ApiGateway'e refactor edildi", "status": "done" },
+    { "text": "Güvenlik başlıkları eklendi — X-Frame-Options, XSS koruması", "status": "done" }
+  ]
+}
