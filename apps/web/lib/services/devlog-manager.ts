@@ -14,7 +14,7 @@ export interface DevlogEntry {
   version:   string;
   date:      string;
   title:     string;
-  category:  "api" | "ui" | "security" | "performance";
+  category:  "api" | "ui" | "security" | "performance" | "infrastructure";
   items:     DevlogItem[];
   published?: boolean;
 }
@@ -35,7 +35,7 @@ export function validateEntry(raw: unknown): raw is DevlogEntry {
   if (typeof e.version !== "string" || !SEMVER_RE.test(e.version)) return false;
   if (typeof e.date    !== "string" || !ISO_DATE_RE.test(e.date))   return false;
   if (typeof e.title   !== "string" || !e.title.trim())             return false;
-  if (!["api", "ui", "security", "performance"].includes(e.category as string)) return false;
+  if (!["api", "ui", "security", "performance", "infrastructure"].includes(e.category as string)) return false;
   if (!Array.isArray(e.items) || e.items.length === 0)              return false;
 
   return true;
