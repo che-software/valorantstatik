@@ -1,0 +1,29 @@
+{
+  "version": "v2.0.0",
+  "date": "2026-06-05T00:00:00Z",
+  "title": "Monorepo Architecture, Che-Software Rebrand & MongoDB Fix",
+  "category": "infrastructure",
+  "published": true,
+  "items": [
+    { "text": "Project rebranded from 'KediPotter Tracker' to 'Che Tracker' — all UI, metadata, SEO titles and Open Graph tags updated across the codebase", "status": "done" },
+    { "text": "Monorepo architecture adopted — project split into apps/web (Next.js frontend) and apps/api (Express + Mongoose backend) under a single git repository", "status": "done" },
+    { "text": "Production-ready Express + Mongoose REST API built from scratch using clean MVC pattern: /config, /models, /controllers, /routes, /middleware", "status": "done" },
+    { "text": "Three Mongoose models created: Player (rank snapshots, PUUID key), Match (all 10 players embedded), CachedResponse (TTL-based MongoDB cache replacing Redis)", "status": "done" },
+    { "text": "HenrikDev API client rewritten with typed ApiError class, 3-attempt retry logic on 429/500, and envelope unwrapping (response.data.data)", "status": "done" },
+    { "text": "RESTful API endpoints: GET /api/v1/players/:name/:tag, /matches, /stats, /full (combined) and /api/v1/leaderboard/:region", "status": "done" },
+    { "text": "Two-tier rate limiting middleware: global 200 req/min + search-specific 30 req/min per IP using express-rate-limit", "status": "done" },
+    { "text": "Centralised error handler maps ApiError, Mongoose ValidationError and CastError to consistent JSON envelopes — never leaks stack traces in production", "status": "done" },
+    { "text": "Graceful shutdown implemented — SIGTERM/SIGINT handlers close HTTP server then MongoDB connection before exiting", "status": "done" },
+    { "text": "Landing page fully redesigned: ambient grid background, staggered fade-up animations, micro stat counters, feature card grid with hover gradient tints", "status": "done" },
+    { "text": "Navbar upgraded — new CheTracker SVG logo mark, Riot sign-in button with rose glow on hover, improved mobile drawer", "status": "done" },
+    { "text": "Footer redesigned — Che-Software branding, icon-wrapped GitHub/Discord social links, Riot mandatory legal disclaimer preserved", "status": "done" },
+    { "text": "globals.css overhauled — Inter font, CSS design tokens, animate-fade-up / animate-pulse-glow keyframes, staggered delay utilities", "status": "done" },
+    { "text": "Security hardened — all .env / .env.local files removed from git history, .gitignore reinforced at root and per-app level, only .example files committed", "status": "done" },
+    { "text": "Git identity configured (Che-Software / ensare646@gmail.com), initial monorepo commit pushed to github.com/che-software/valorantstatik", "status": "done" },
+    { "text": "MongoDB Atlas migration: old cluster (codevra.39ivkjs) was unreachable — root cause identified as Node.js system DNS failing to resolve SRV records", "status": "done" },
+    { "text": "DNS fix applied: dns.setServers(['8.8.8.8', '1.1.1.1']) added to prisma.ts — forces Google/Cloudflare DNS, bypassing broken system resolver", "status": "done" },
+    { "text": "New MongoDB Atlas cluster (cluster0.yhueagw) provisioned on AWS Frankfurt — connection verified with full read/write test (MongoDB 8.0.24)", "status": "done" },
+    { "text": "DATABASE_URL updated on Vercel production environment variables — new cluster connection string deployed", "status": "done" },
+    { "text": "Deployed to production via Vercel CLI — build time 46-51s, live at kedipotter-tracker.vercel.app", "status": "done" }
+  ]
+}
