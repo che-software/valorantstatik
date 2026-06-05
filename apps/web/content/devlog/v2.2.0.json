@@ -1,0 +1,24 @@
+{
+  "version": "v2.2.0",
+  "date": "2026-06-05T18:00:00Z",
+  "title": "Agent Main Recommendation System & UI Overhaul",
+  "category": "ui",
+  "published": true,
+  "items": [
+    { "text": "Agent Mastery panel completely rebuilt — now shows a 'Should I main this?' recommendation for every agent based on the player's own stats", "status": "done" },
+    { "text": "Main Score (0–100) algorithm added — composite score weighing win rate delta, KDA delta and ACS delta against the player's overall averages", "status": "done" },
+    { "text": "Four verdict tiers introduced: Main This (green), Good Secondary (blue), Situational (yellow), Consider Avoiding (red)", "status": "done" },
+    { "text": "Per-map breakdown added to each agent — shows win rate, ACS and game count on every map the agent was played", "status": "done" },
+    { "text": "Best Map / Weakest Map callout cards added — green highlight for strongest map, red for weakest", "status": "done" },
+    { "text": "Agent role labels added (Duelist / Controller / Initiator / Sentinel) with colour-coded dots for quick visual identification", "status": "done" },
+    { "text": "AgentMastery component made full-width on the player profile page for better readability", "status": "done" },
+    { "text": "stats-processor.ts extended — AgentStat interface now includes mapBreakdown, bestMap, worstMap, mainScore, mainVerdict, mainReason fields", "status": "done" },
+    { "text": "Agent role lookup table added (getAgentRole) covering all current Valorant agents including Tejo, Waylay, Clove and Vyse", "status": "done" },
+    { "text": "SearchBar translated to English — placeholder, error message, button labels and recent searches header updated", "status": "done" },
+    { "text": "MatchCard translated — Victory/Defeat labels, Shot Distribution, KAST ratio, Damage per round, First Blood, Score header", "status": "done" },
+    { "text": "TiltMeter translated — Mental State, Last 5 Games, K/D Trend, Aggression labels updated", "status": "done" },
+    { "text": "KdaTrendChart translated — trend badges (Rising / Falling / Stable) and Avg stat labels updated", "status": "done" },
+    { "text": "Player profile page translated — Server label, Current Rank, Back button, Refresh button, demo mode notice, error retry button", "status": "done" },
+    { "text": "Devlog validator updated to support 'infrastructure' category — v2.0.0 entry was silently skipped before this fix", "status": "done" }
+  ]
+}
