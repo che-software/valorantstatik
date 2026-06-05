@@ -18,7 +18,7 @@ export default function TiltMeter({ tilt }: { tilt: TiltStats }) {
     <div className={`glass-card rounded-2xl p-5 border ${c.border} ${c.bg}`}>
       <div className="flex items-center gap-2 mb-4">
         <Brain className={`w-4 h-4 ${c.text}`} />
-        <h3 className="text-white font-bold text-sm uppercase tracking-widest">Mental Durum</h3>
+        <h3 className="text-white font-bold text-sm uppercase tracking-widest">Mental State</h3>
         <span className="ml-auto text-lg">{tilt.emoji}</span>
       </div>
 
@@ -45,7 +45,7 @@ export default function TiltMeter({ tilt }: { tilt: TiltStats }) {
           <p className={`text-sm font-black ${tilt.recentWinRate >= 50 ? "text-green-400" : "text-red-400"}`}>
             %{tilt.recentWinRate}
           </p>
-          <p className="text-white/30 text-[10px]">Son 5 Maç</p>
+          <p className="text-white/30 text-[10px]">Last 5 Games</p>
         </div>
         <div className="text-center">
           <p className={`text-sm font-black ${tilt.kdTrend >= 0 ? "text-green-400" : "text-red-400"}`}>
@@ -55,7 +55,7 @@ export default function TiltMeter({ tilt }: { tilt: TiltStats }) {
         </div>
         <div className="text-center">
           <p className="text-sm font-black text-white/70">{tilt.firstBloodRate}%</p>
-          <p className="text-white/30 text-[10px]">Agresiflik</p>
+          <p className="text-white/30 text-[10px]">Aggression</p>
         </div>
       </div>
 

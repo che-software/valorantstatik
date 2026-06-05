@@ -9,7 +9,6 @@
     { "text": "Production API access granted — rate limits upgraded from personal-key tier to production tier (significantly higher throughput)", "status": "done" },
     { "text": "RSO OAuth2 flow fully validated in production environment — /api/auth/riot/login → callback → session pipeline confirmed working end-to-end", "status": "done" },
     { "text": "Players can now sign in with their official Riot account — game_name, tag_line, level, card and rank data pulled via authenticated RSO session", "status": "done" },
-    { "text": "Production API application process initiated — VAL-MATCH-V1 and full match data endpoints targeted for next approval stage", "status": "progress" },
     { "text": "Riot Developer Policy compliance audit passed — disclaimer texts, data handling and user consent flow reviewed and confirmed", "status": "done" },
     { "text": "UserConsent model added to MongoDB schema — opt-in/opt-out tracking with timestamps per PUUID as required by Riot's data policy", "status": "done" }
   ]

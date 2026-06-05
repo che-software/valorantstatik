@@ -47,7 +47,7 @@ export default function SearchBar() {
     setError("");
     const parts = query.trim().split("#");
     if (parts.length !== 2 || !parts[0] || !parts[1]) {
-      setError("RiotID#TAG formatında girin · örn: TenZ#0000");
+      setError("Enter RiotID#TAG format · e.g. TenZ#0000");
       return;
     }
     navigate(parts[0], parts[1]);
@@ -99,7 +99,7 @@ export default function SearchBar() {
               value={query}
               onChange={e => setQuery(e.target.value)}
               onFocus={() => setFocused(true)}
-              placeholder="RiotID#TAG · örn: TenZ#0000"
+              placeholder="RiotID#TAG · e.g. TenZ#0000"
               disabled={loading}
               className="flex-1 py-5 px-2 bg-transparent text-white placeholder-white/25 focus:outline-none text-base disabled:opacity-50"
             />
@@ -126,12 +126,12 @@ export default function SearchBar() {
                 {loading ? (
                   <motion.span key="loading" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} className="flex items-center gap-2">
                     <motion.span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full block" animate={{ rotate: 360 }} transition={{ duration: 0.7, repeat: Infinity, ease: "linear" }} />
-                    <span>Aranıyor</span>
+                    <span>Searching</span>
                   </motion.span>
                 ) : (
                   <motion.span key="idle" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} className="flex items-center gap-1.5">
                     <Crosshair className="w-4 h-4" />
-                    Ara
+                    Search
                   </motion.span>
                 )}
               </AnimatePresence>
@@ -168,14 +168,14 @@ export default function SearchBar() {
             <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.05]">
               <div className="flex items-center gap-1.5 text-white/30 text-xs">
                 <Clock className="w-3.5 h-3.5" />
-                <span>Son Aramalar</span>
+                <span>Recent Searches</span>
               </div>
               <button
                 onClick={handleClearAll}
                 className="flex items-center gap-1 text-white/20 hover:text-red-400 text-xs transition-colors"
               >
                 <Trash2 className="w-3 h-3" />
-                Temizle
+                Clear
               </button>
             </div>
 

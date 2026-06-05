@@ -115,7 +115,7 @@ export default function KdaTrendChart({ matches, playerName, playerTag }: KdaTre
           {trendUp   ? <TrendingUp   className="w-3.5 h-3.5" /> :
            trendDown ? <TrendingDown className="w-3.5 h-3.5" /> :
                        <Minus        className="w-3.5 h-3.5" />}
-          {trendUp ? "Yükseliş" : trendDown ? "Düşüş" : "Stabil"}
+          {trendUp ? "Rising" : trendDown ? "Falling" : "Stable"}
           <span className="text-[10px] opacity-70 ml-0.5">
             ({trendDiff >= 0 ? "+" : ""}{trendDiff.toFixed(2)} K/D)
           </span>
@@ -223,10 +223,10 @@ export default function KdaTrendChart({ matches, playerName, playerTag }: KdaTre
       {/* Özet istatistikler */}
       <div className="px-5 pb-4 grid grid-cols-4 gap-3">
         {[
-          { label: "Ort. Kill",   value: (points.reduce((s, p) => s + p.kills,   0) / points.length).toFixed(1), color: "text-green-400" },
-          { label: "Ort. Death",  value: (points.reduce((s, p) => s + p.deaths,  0) / points.length).toFixed(1), color: "text-red-400"   },
-          { label: "Ort. Assist", value: (points.reduce((s, p) => s + p.assists, 0) / points.length).toFixed(1), color: "text-blue-400"  },
-          { label: "Ort. K/D",    value: (points.reduce((s, p) => s + p.kd,      0) / points.length).toFixed(2), color: "text-yellow-400" },
+          { label: "Avg Kills",  value: (points.reduce((s, p) => s + p.kills,   0) / points.length).toFixed(1), color: "text-green-400" },
+          { label: "Avg Deaths", value: (points.reduce((s, p) => s + p.deaths,  0) / points.length).toFixed(1), color: "text-red-400"   },
+          { label: "Avg Assist", value: (points.reduce((s, p) => s + p.assists, 0) / points.length).toFixed(1), color: "text-blue-400"  },
+          { label: "Avg K/D",    value: (points.reduce((s, p) => s + p.kd,      0) / points.length).toFixed(2), color: "text-yellow-400" },
         ].map(s => (
           <div key={s.label} className="bg-white/[0.03] rounded-lg p-2 text-center">
             <p className={`text-sm font-bold ${s.color}`}>{s.value}</p>

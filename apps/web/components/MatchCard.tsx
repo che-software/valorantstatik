@@ -127,7 +127,7 @@ export default function MatchCard({ match, playerName, playerTag }: MatchCardPro
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
             <span className={`text-[11px] font-bold uppercase px-1.5 py-0.5 rounded ${won ? "bg-green-500/15 text-green-400" : "bg-red-500/15 text-red-400"}`}>
-              {won ? "Kazandı" : "Kaybetti"}
+              {won ? "Victory" : "Defeat"}
             </span>
             {isMvp && (
               <span className="text-[10px] text-yellow-400 font-bold bg-yellow-400/10 px-1.5 py-0.5 rounded border border-yellow-400/20">
@@ -165,7 +165,7 @@ export default function MatchCard({ match, playerName, playerTag }: MatchCardPro
         {/* Skor (md+) */}
         <div className="text-right flex-shrink-0 hidden md:block min-w-[52px]">
           <p className={`font-black text-xl leading-none ${won ? "text-green-400" : "text-red-400"}`}>{score}</p>
-          <p className="text-white/20 text-[10px] mt-0.5">SKOR</p>
+          <p className="text-white/20 text-[10px] mt-0.5">SCORE</p>
         </div>
 
         {/* Accordion ok */}
@@ -201,7 +201,7 @@ export default function MatchCard({ match, playerName, playerTag }: MatchCardPro
               <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
                 <div className="h-full bg-blue-400 rounded-full transition-all" style={{ width: `${kast}%` }} />
               </div>
-              <p className="text-white/25 text-[10px]">K·A·S·T oranı</p>
+              <p className="text-white/25 text-[10px]">K·A·S·T ratio</p>
             </div>
 
             {/* ADR */}
@@ -214,7 +214,7 @@ export default function MatchCard({ match, playerName, playerTag }: MatchCardPro
               <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
                 <div className="h-full bg-[#FF4655] rounded-full transition-all" style={{ width: `${Math.min(player.adr / 2, 100)}%` }} />
               </div>
-              <p className="text-white/25 text-[10px]">Round başı hasar</p>
+              <p className="text-white/25 text-[10px]">Damage per round</p>
             </div>
 
             {/* First Blood */}
@@ -224,18 +224,18 @@ export default function MatchCard({ match, playerName, playerTag }: MatchCardPro
                 <span>First Blood</span>
               </div>
               <p className={`font-black text-2xl leading-none ${hasFirstBlood ? "text-red-400" : "text-white/20"}`}>
-                {hasFirstBlood ? "Evet" : "Yok"}
+                {hasFirstBlood ? "Yes" : "None"}
               </p>
               <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
                 <div className={`h-full rounded-full transition-all ${hasFirstBlood ? "bg-red-400 w-full" : "w-0"}`} />
               </div>
-              <p className="text-white/25 text-[10px]">İlk kan tahmini</p>
+              <p className="text-white/25 text-[10px]">First blood estimate</p>
             </div>
           </div>
 
           {/* Vücut bölgesi dağılımı */}
           <div className="bg-white/[0.03] rounded-xl p-3">
-            <p className="text-white/30 text-[10px] uppercase tracking-wider mb-2">Atış Dağılımı</p>
+            <p className="text-white/30 text-[10px] uppercase tracking-wider mb-2">Shot Distribution</p>
             <div className="flex items-center gap-2">
               <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden flex">
                 {totalShots > 0 && (
@@ -257,8 +257,8 @@ export default function MatchCard({ match, playerName, playerTag }: MatchCardPro
           {/* Takım tablosu */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {[
-              { label: won ? "Kazanan Takım" : "Senin Takımın", players: myTeamPlayers, accent: won ? "text-green-400" : "text-red-400" },
-              { label: won ? "Kaybeden Takım" : "Rakip Takım",  players: oppTeamPlayers, accent: "text-white/40" },
+              { label: won ? "Winning Team" : "Your Team",  players: myTeamPlayers, accent: won ? "text-green-400" : "text-red-400" },
+              { label: won ? "Losing Team"  : "Enemy Team", players: oppTeamPlayers, accent: "text-white/40" },
             ].map(side => (
               <div key={side.label} className="bg-white/[0.03] rounded-xl overflow-hidden">
                 <p className={`text-[10px] uppercase tracking-wider px-3 py-2 border-b border-white/[0.05] ${side.accent} font-semibold`}>
