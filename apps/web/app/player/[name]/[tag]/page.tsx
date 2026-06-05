@@ -61,16 +61,16 @@ function PlayerHeader({ player }: { player: TransformedPlayer }) {
           <h1 className="text-3xl font-black text-white tracking-tight">
             {player.name}<span className="text-white/30 font-normal text-xl">#{player.tag}</span>
           </h1>
-          <p className="text-white/40 text-sm uppercase tracking-widest mt-0.5">{player.region} Sunucusu</p>
+          <p className="text-white/40 text-sm uppercase tracking-widest mt-0.5">{player.region} Server</p>
           <p className="flex items-center gap-1 text-white/20 text-xs mt-2">
-            <Clock className="w-3 h-3" /> {updatedAt} guncellendi
+            <Clock className="w-3 h-3" /> Updated just now
           </p>
         </div>
         <div className="flex items-center gap-6 flex-shrink-0">
           {rank ? (
             <>
               <div className="text-center">
-                <p className="text-white/30 text-[10px] uppercase tracking-wider mb-1">Guncel Rank</p>
+                <p className="text-white/30 text-[10px] uppercase tracking-wider mb-1">Current Rank</p>
                 <Image src={rank.iconUrl} alt={rank.name} width={56} height={56} style={{ width: 56, height: "auto" }} className="mx-auto drop-shadow-lg" unoptimized />
                 <p className="text-white font-bold text-sm mt-1">{rank.name}</p>
                 <p className="text-white/40 text-xs">{rank.rr} RR</p>
@@ -169,7 +169,7 @@ export default function PlayerPage() {
     <main className="min-h-screen px-4 py-6 max-w-6xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <Link href="/" className="inline-flex items-center gap-2 text-white/40 hover:text-white transition-colors text-sm">
-          <ArrowLeft className="w-4 h-4" /> Geri
+          <ArrowLeft className="w-4 h-4" /> Back
         </Link>
         <div className="flex items-center gap-3">
           <Link href="/leaderboard" className="inline-flex items-center gap-1.5 text-white/30 hover:text-[#FF4655] text-xs transition-colors">
@@ -177,7 +177,7 @@ export default function PlayerPage() {
           </Link>
           {!loading && (
             <button onClick={load} className="inline-flex items-center gap-1.5 text-white/30 hover:text-[#FF4655] text-xs transition-colors">
-              <RefreshCw className="w-3 h-3" /> Yenile
+              <RefreshCw className="w-3 h-3" /> Refresh
             </button>
           )}
         </div>
@@ -189,7 +189,7 @@ export default function PlayerPage() {
             className="glass-card rounded-xl p-4 flex items-center gap-3 border border-yellow-500/30 bg-yellow-500/5">
             <FlaskConical className="w-4 h-4 text-yellow-400 flex-shrink-0" />
             <p className="text-white/60 text-sm flex-1">
-              Demo modu: canlı veri alınamadı; yerel örnek veriler gösteriliyor. Ağ veya API yapılandırmasını kontrol edin.
+              Demo mode: live data unavailable — showing local sample data. Check your network or API configuration.
             </p>
           </motion.div>
         )}
@@ -201,7 +201,7 @@ export default function PlayerPage() {
             className="glass-card rounded-xl p-4 flex items-center gap-3 border border-[#FF4655]/30">
             <AlertCircle className="w-4 h-4 text-[#FF4655] flex-shrink-0" />
             <p className="text-white/70 text-sm flex-1">{error}</p>
-            <button onClick={load} className="text-[#FF4655] text-xs hover:underline">Tekrar Dene</button>
+            <button onClick={load} className="text-[#FF4655] text-xs hover:underline">Retry</button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -222,16 +222,18 @@ export default function PlayerPage() {
           <StatsOverview matches={matches} playerName={playerName} playerTag={playerTag} player={player} />
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <StatCard label="K/D Orani"  value={stats.kd}              sub={`${stats.kills}K / ${stats.deaths}D`}             color="#FF4655" delay={0.05} />
-            <StatCard label="Kazanma %"  value={`${stats.winRate}%`}   sub={`${stats.wins}W / ${stats.matches - stats.wins}L`} color="#4ade80" delay={0.1}  />
-            <StatCard label="Headshot %" value={`${stats.hsPercent}%`} sub={`${stats.headshots} HS`}                           color="#facc15" delay={0.15} />
-            <StatCard label="ADR"        value={stats.adr}              sub={`Avg ACS ${stats.avgAcs}`}                        color="#60a5fa" delay={0.2}  />
+            <StatCard label="K/D Ratio"   value={stats.kd}              sub={`${stats.kills}K / ${stats.deaths}D`}             color="#FF4655" delay={0.05} />
+            <StatCard label="Win Rate"    value={`${stats.winRate}%`}   sub={`${stats.wins}W / ${stats.matches - stats.wins}L`} color="#4ade80" delay={0.1}  />
+            <StatCard label="Headshot %"  value={`${stats.hsPercent}%`} sub={`${stats.headshots} HS`}                           color="#facc15" delay={0.15} />
+            <StatCard label="ADR"         value={stats.adr}              sub={`Avg ACS ${stats.avgAcs}`}                        color="#60a5fa" delay={0.2}  />
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <WeaponTable weapons={stats.weapons} />
             <MapStats    maps={stats.maps} />
-            <AgentMastery agents={stats.agents} />
           </div>
+
+          {/* Agent Mastery — full width for richer layout */}
+          <AgentMastery agents={stats.agents} />
 
           {/* Gelismis analitik satiri */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -241,13 +243,13 @@ export default function PlayerPage() {
           </div>
           <div className="space-y-2">
             <h3 className="text-white/40 text-xs uppercase tracking-widest font-semibold">
-              Son {matches.length} Mac {isMock && <span className="text-yellow-400/60">(Demo)</span>}
+              Last {matches.length} Matches {isMock && <span className="text-yellow-400/60">(Demo)</span>}
             </h3>
             {matches.length >= 2 && (
               <KdaTrendChart key="kda-trend" matches={matches} playerName={playerName} playerTag={playerTag} />
             )}
             {matches.length === 0 ? (
-              <p className="text-white/25 text-sm text-center py-10">Mac bulunamadi.</p>
+              <p className="text-white/25 text-sm text-center py-10">No matches found.</p>
             ) : (
               <div className="space-y-2">
                 {matches.map((m, i) => (
