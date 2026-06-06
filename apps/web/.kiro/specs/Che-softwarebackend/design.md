@@ -1,6 +1,6 @@
-# Tasarım Belgesi — Enterprise Backend Mimarisi
+﻿# Design Document — Enterprise Backend Architecture
 
-## Genel Bakış
+## Overview
 
 KediPotter Tracker'ın mevcut monolitik route handler yapısı, enterprise düzey bir katmanlı mimariye dönüştürülecektir. Hedef; sorumlulukları net biçimde ayrılmış servisler, akıllı önbellekleme, güçlü hata yönetimi ve dinamik içerik yönetimi inşa etmektir.
 
@@ -10,7 +10,7 @@ Mevcut durumda tüm iş mantığı `app/api/valorant/route.ts` içinde yığılm
 
 ---
 
-## Mimari
+## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -46,7 +46,7 @@ Mevcut durumda tüm iş mantığı `app/api/valorant/route.ts` içinde yığılm
 
 ---
 
-## Bileşenler ve Arayüzler
+## Components and Interfaces
 
 ### 1. Klasör Yapısı
 
@@ -284,7 +284,7 @@ export interface FallbackResult {
 
 ---
 
-## Veri Modelleri
+## Data Models
 
 ### Redis TTL Tablosu
 
@@ -495,189 +495,209 @@ category: api
 
 ---
 
-## Doğruluk Özellikleri
+## Correctness Properties
 
 *Bir özellik (property), sistemin tüm geçerli çalışmalarında doğru olması gereken bir karakteristik veya davranıştır — temelde sistemin ne yapması gerektiğine dair biçimsel bir ifadedir. Özellikler, insan tarafından okunabilir spesifikasyonlar ile makine tarafından doğrulanabilir doğruluk garantileri arasındaki köprüyü oluşturur.*
 
 ---
 
-### Özellik 1: Her Veri Tipi İçin Doğru TTL
+### Property 1: Her Veri Tipi İçin Doğru TTL
 
 *Herhangi bir* veri tipi ve önbellek anahtarı için, `CacheManager.set` çağrısından sonra Redis'te saklanan anahtarın TTL değeri, `TTL_TABLE`'da tanımlanan değere eşit olmalıdır.
 
-**Doğrular: Gereksinimler 1.1, 1.2, 1.3, 1.4, 1.5, 1.9, 5.5**
+**Validates: Requirements 1.1, 1.2, 1.3, 1.4, 1.5, 1.9, 5.5**
 
 ---
 
-### Özellik 2: Redis Yoksa In-Memory Fallback
+### Property 2: Redis Yoksa In-Memory Fallback
 
 *Herhangi bir* Redis bağlantı hatası veya `REDIS_URL` yokluğu durumunda, `CacheManager.get` ve `CacheManager.set` çağrıları exception fırlatmadan in-memory Map üzerinden çalışmaya devam etmelidir.
 
-**Doğrular: Gereksinimler 1.6, 1.10, 2.5**
+**Validates: Requirements 1.6, 1.10, 2.5**
 
 ---
 
-### Özellik 3: Önbellek Anahtarı Formatı
+### Property 3: Önbellek Anahtarı Formatı
 
 *Herhangi bir* veri tipi, oyuncu adı ve tag kombinasyonu için, `buildKey` fonksiyonunun ürettiği anahtar `{veriTipi}:{oyuncuAdı}:{tag}` formatına uymalıdır; büyük/küçük harf normalizasyonu uygulanmalıdır.
 
-**Doğrular: Gereksinimler 1.8, 2.4**
+**Validates: Requirements 1.8, 2.4**
 
 ---
 
-### Özellik 4: Rate Limit Aşılınca 429 + Retry-After
+### Property 4: Rate Limit Aşılınca 429 + Retry-After
 
 *Herhangi bir* IP adresi için, 60 saniyelik pencerede 30 isteği aşan sonraki her istek; `429 Too Many Requests` HTTP yanıtı ve `Retry-After` başlığı içermelidir.
 
-**Doğrular: Gereksinimler 2.1, 2.2, 2.3**
+**Validates: Requirements 2.1, 2.2, 2.3**
 
 ---
 
-### Özellik 5: IP Tespiti
+### Property 5: IP Tespiti
 
 *Herhangi bir* gelen istek için, `x-forwarded-for` başlığı mevcutsa rate limiter bu başlıktan IP'yi okumalı; başlık yoksa `request.ip` kullanılmalıdır.
 
-**Doğrular: Gereksinim 2.7**
+ param($m)
+    $m.Value -replace 'Validates:', 'Validates:' -replace 'Gereksinim\b', 'Requirements'
+
 
 ---
 
-### Özellik 6: processMatch Dönüşüm Doğruluğu
+### Property 6: processMatch Dönüşüm Doğruluğu
 
 *Herhangi bir* geçerli ham API maç nesnesi için, `processMatch` fonksiyonunun çıktısı `TransformedMatch` şemasına uymalı; `matchId`, `map`, `mode`, `players` ve `teams` alanları dolu olmalıdır.
 
-**Doğrular: Gereksinimler 3.5, 8.2**
+**Validates: Requirements 3.5, 8.2**
 
 ---
 
-### Özellik 7: MatchProcessor İstatistik Hesaplama Doğruluğu
+### Property 7: MatchProcessor İstatistik Hesaplama Doğruluğu
 
 *Herhangi bir* `TransformedMatch` ve geçerli `puuid` için, `processPlayerStats` çıktısındaki `acs`, `adr`, `kd` ve `hsPercent` değerleri; maç verisindeki ham sayılardan matematiksel olarak türetilebilir olmalıdır.
 
-**Doğrular: Gereksinimler 3.6, 3.7, 8.3, 8.4**
+**Validates: Requirements 3.6, 3.7, 8.3, 8.4**
 
 ---
 
-### Özellik 8: Standart Hata Yanıt Formatı
+### Property 8: Standart Hata Yanıt Formatı
 
 *Herhangi bir* API hatası için, döndürülen yanıt `{ error: string, status: number }` asgari yapısına uymalıdır; 429 hatalarında ek olarak `retryAfter: number` alanı bulunmalıdır.
 
-**Doğrular: Gereksinimler 3.9, 7.8**
+**Validates: Requirements 3.9, 7.8**
 
 ---
 
-### Özellik 9: Ekonomi Analizi Doğruluğu ve Sınır Değerleri
+### Property 9: Ekonomi Analizi Doğruluğu ve Sınır Değerleri
 
 *Herhangi bir* round verisi listesi için, `calcEconomy` fonksiyonunun çıktısındaki `fullBuyRounds + forceRounds + ecoRounds` toplamı toplam round sayısına eşit olmalı; tüm win rate değerleri 0–100 arasında olmalıdır.
 
-**Doğrular: Gereksinimler 4.1, 4.2**
+**Validates: Requirements 4.1, 4.2**
 
 ---
 
-### Özellik 10: Clutch İstatistikleri Doğruluğu ve Sınır Değerleri
+### Property 10: Clutch İstatistikleri Doğruluğu ve Sınır Değerleri
 
 *Herhangi bir* round verisi listesi için, `calcClutch` fonksiyonunun çıktısındaki `clutchRating` değeri 0–100 arasında olmalı; `totalWins` değeri `totalClutches` değerini aşmamalıdır.
 
-**Doğrular: Gereksinimler 4.3, 4.4**
+**Validates: Requirements 4.3, 4.4**
 
 ---
 
-### Özellik 11: Tüm Skor Hesaplamaları 0–100 Arasında
+### Property 11: Tüm Skor Hesaplamaları 0–100 Arasında
 
 *Herhangi bir* maç listesi için, `calcTilt` ve `calcDuoSynergy` fonksiyonlarının ürettiği `score` ve `synergyScore` değerleri her zaman 0–100 arasında olmalıdır.
 
-**Doğrular: Gereksinimler 4.6, 4.7**
+**Validates: Requirements 4.6, 4.7**
 
 ---
 
-### Özellik 12: Yetersiz Veri Koruması
+### Property 12: Yetersiz Veri Koruması
 
 *Herhangi bir* 3'ten az maç içeren giriş için, `StatsEngine` metodları hesaplama yapmak yerine `{ insufficient_data: true }` döndürmelidir.
 
-**Doğrular: Gereksinim 4.8**
+ param($m)
+    $m.Value -replace 'Validates:', 'Validates:' -replace 'Gereksinim\b', 'Requirements'
+
 
 ---
 
-### Özellik 13: Pure Function Garantisi (İdempotens)
+### Property 13: Pure Function Garantisi (İdempotens)
 
 *Herhangi bir* `StatsEngine` metodu için, aynı girdi ile iki kez çağrıldığında çıktı değişmemelidir; metodlar dış duruma bağımlı olmamalıdır.
 
-**Doğrular: Gereksinim 4.9**
+ param($m)
+    $m.Value -replace 'Validates:', 'Validates:' -replace 'Gereksinim\b', 'Requirements'
+
 
 ---
 
-### Özellik 14: DevlogManager Doğrulama
+### Property 14: DevlogManager Doğrulama
 
 *Herhangi bir* eksik zorunlu alan (`version`, `date`, `title`, `category`, `items`) içeren devlog girişi için, `validateEntry` fonksiyonu `false` döndürmeli ve bu giriş sonuç listesine dahil edilmemelidir.
 
-**Doğrular: Gereksinimler 5.2, 5.6, 5.7**
+**Validates: Requirements 5.2, 5.6, 5.7**
 
 ---
 
-### Özellik 15: Devlog Sıralama Invariantı
+### Property 15: Devlog Sıralama Invariantı
 
 *Herhangi bir* devlog giriş listesi için, `getEntries` fonksiyonunun döndürdüğü liste `date` alanına göre azalan sırada (en yeni önce) olmalıdır.
 
-**Doğrular: Gereksinim 5.3**
+ param($m)
+    $m.Value -replace 'Validates:', 'Validates:' -replace 'Gereksinim\b', 'Requirements'
+
 
 ---
 
-### Özellik 16: Devlog Hata İzolasyonu
+### Property 16: Devlog Hata İzolasyonu
 
 *Herhangi bir* N geçerli + M geçersiz devlog dosyası kombinasyonu için, `getEntries` fonksiyonu tam olarak N giriş döndürmeli; M geçersiz giriş sessizce atlanmalıdır.
 
-**Doğrular: Gereksinim 5.4**
+ param($m)
+    $m.Value -replace 'Validates:', 'Validates:' -replace 'Gereksinim\b', 'Requirements'
+
 
 ---
 
-### Özellik 17: Cron Güvenliği
+### Property 17: Cron Güvenliği
 
 *Herhangi bir* `/api/cron/*` rotasına `CRON_SECRET` olmadan yapılan istek için, sistem `401 Unauthorized` döndürmelidir.
 
-**Doğrular: Gereksinim 6.7**
+ param($m)
+    $m.Value -replace 'Validates:', 'Validates:' -replace 'Gereksinim\b', 'Requirements'
+
 
 ---
 
-### Özellik 18: Retry + Fallback Zinciri
+### Property 18: Retry + Fallback Zinciri
 
 *Herhangi bir* başarısız dış API çağrısı için, `RetryHandler` şu sırayı izlemelidir: (1) yapılandırılmış sayıda yeniden deneme, (2) Redis stale veri, (3) MongoDB son kayıt, (4) `{ error, retryAfter }` yanıtı. Her adım bir önceki başarısız olduğunda devreye girmelidir.
 
-**Doğrular: Gereksinimler 7.1, 7.2, 7.3, 7.4, 7.5**
+**Validates: Requirements 7.1, 7.2, 7.3, 7.4, 7.5**
 
 ---
 
-### Özellik 19: Stale Veri Bayrağı
+### Property 19: Stale Veri Bayrağı
 
 *Herhangi bir* stale (bayat) önbellek veya DB verisi döndürüldüğünde, yanıt `{ stale: true, warning: string }` alanlarını içermelidir.
 
-**Doğrular: Gereksinim 7.7**
+ param($m)
+    $m.Value -replace 'Validates:', 'Validates:' -replace 'Gereksinim\b', 'Requirements'
+
 
 ---
 
-### Özellik 20: Beklenmedik Hata Yönetimi
+### Property 20: Beklenmedik Hata Yönetimi
 
 *Herhangi bir* route handler'da beklenmedik exception fırlatıldığında, istemciye dönen yanıt `500 Internal Server Error` olmalı ve stack trace içermemelidir.
 
-**Doğrular: Gereksinim 7.9**
+ param($m)
+    $m.Value -replace 'Validates:', 'Validates:' -replace 'Gereksinim\b', 'Requirements'
+
 
 ---
 
-### Özellik 21: MatchProcessor Geriye Dönük Uyumluluk
+### Property 21: MatchProcessor Geriye Dönük Uyumluluk
 
 *Herhangi bir* `TransformedMatch` listesi için, `processLifetimeStats(matches, name, tag)` çıktısı `processStats(matches, name, tag)` çıktısıyla eşdeğer olmalıdır.
 
-**Doğrular: Gereksinim 8.6**
+ param($m)
+    $m.Value -replace 'Validates:', 'Validates:' -replace 'Gereksinim\b', 'Requirements'
+
 
 ---
 
-### Özellik 22: AgentStats Unique Constraint
+### Property 22: AgentStats Unique Constraint
 
 *Herhangi bir* `puuid` + `agent` kombinasyonu için, `AgentStats` tablosuna aynı kombinasyonla ikinci bir kayıt eklemeye çalışıldığında Prisma unique constraint hatası fırlatmalıdır.
 
-**Doğrular: Gereksinim 9.7**
+ param($m)
+    $m.Value -replace 'Validates:', 'Validates:' -replace 'Gereksinim\b', 'Requirements'
+
 
 ---
 
-## Hata Yönetimi
+## Error Handling
 
 ### Hata Sınıflandırması
 
@@ -746,7 +766,7 @@ Dış API İsteği
 
 ---
 
-## Test Stratejisi
+## Testing Strategy
 
 ### İkili Test Yaklaşımı
 
