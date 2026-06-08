@@ -5,7 +5,7 @@ import { ArrowLeft, BarChart2, Code2, Heart, Shield, Lock, FileText, Eye, UserX 
 
 export const metadata: Metadata = {
   title: "Hakkımızda",
-  description: "KediPotter Tracker hakkında bilgi, gizlilik özeti ve Riot Games geliştirici uyumluluğu.",
+  description: "Che Tracker hakkında bilgi, gizlilik özeti ve Riot Games geliştirici uyumluluğu.",
 };
 
 const PRIVACY_SECTIONS = [
