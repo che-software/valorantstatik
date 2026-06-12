@@ -18,6 +18,7 @@ import {
 import { useState, useRef, useEffect } from "react";
 import { useAuth }     from "@/lib/auth-context";
 import { useSettings } from "@/lib/settings-context";
+import DonateButton from "./DonateButton";
 
 // ── Riot logo SVG ─────────────────────────────────────────────────────────────
 function RiotLogo({ size = 13 }: { size?: number }) {
@@ -290,7 +291,8 @@ export default function Navbar() {
         </ul>
 
         {/* Desktop right */}
-        <div className="hidden sm:flex items-center gap-2.5 flex-shrink-0">
+        <div className="hidden sm:flex items-center gap-3 flex-shrink-0">
+          <DonateButton />
           <span className="text-[10px] text-emerald-400/80 font-semibold tracking-wide uppercase
                            border border-emerald-500/20 bg-emerald-500/8 px-2 py-0.5 rounded-md">
             Riot-compliant
@@ -376,6 +378,9 @@ export default function Navbar() {
                   <LogOut className="w-4 h-4" />
                   Sign out
                 </button>
+                <div className="pt-2 flex justify-center">
+                  <DonateButton />
+                </div>
               </>
             ) : (
               <>
@@ -391,6 +396,9 @@ export default function Navbar() {
                   <RiotLogo size={15} />
                   {t("nav.signin")}
                 </button>
+                <div className="pt-3 pb-1 flex justify-center border-t border-white/[0.05] mt-2">
+                  <DonateButton />
+                </div>
               </>
             )}
           </div>

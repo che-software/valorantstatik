@@ -69,39 +69,20 @@ export async function getProfile(name: string, tag: string): Promise<ProfileResu
   }
 
   const cacheKey = buildKey("profile", cleanName, cleanTag);
-  const cached   = await cacheManagerGet<ProfileResult>(cacheKey);
+  
+  // 1. Redis Cache Check (Ultra-fast in-memory)
+  const cached = await cacheManagerGet<ProfileResult>(cacheKey);
   if (cached) return { ...cached, cached: true };
 
-  let lastErr: unknown;
-  for (let attempt = 0; attempt < 3; attempt++) {
-    try {
-      const profile = await fetchProfileDirect(cleanName, cleanTag);
-      await cacheManagerSet(cacheKey, profile, TTL_TABLE.profile);
-      upsertPlayerBackground(profile.player);
-      return { ...profile, cached: false };
-    } catch (err) {
-      lastErr = err;
-      const status = (err as { response?: { status?: number } })?.response?.status;
-      console.error(`[ApiGateway] Deneme ${attempt + 1}/3 başarısız - ${cleanName}#${cleanTag}, Status: ${status}`, err);
-      if (status === 429 && attempt < 2) { await sleep(2000); continue; }
-      if (status === 500 && attempt < 1) { await sleep(1000); continue; }
-      break;
-    }
-  }
-
-  // Stale fallback
-  const stale = await cacheManagerGet<ProfileResult>(cacheKey);
-  if (stale) return { ...stale, cached: true, stale: true, warning: "Sistem yoğun, önbellekten yüklendi." };
-
-  // DB fallback
+  // 2. Prisma Database Check (0ms SWR)
   try {
     const { prisma } = await import("@/lib/prisma");
-    console.log(`[ApiGateway] DB fallback için aranıyor: ${cleanName}#${cleanTag}`);
     const dbPlayer = await prisma.player.findFirst({
       where: { name: { equals: cleanName, mode: "insensitive" }, tag: { equals: cleanTag, mode: "insensitive" } },
     });
+
     if (dbPlayer) {
-      console.log(`[ApiGateway] DB'den bulundu: ${dbPlayer.name}#${dbPlayer.tag}`);
+      console.log(`[ApiGateway] SWR: Prisma DB hit for ${dbPlayer.name}#${dbPlayer.tag}`);
       const fp: TransformedPlayer = {
         puuid: dbPlayer.puuid, name: dbPlayer.name, tag: dbPlayer.tag,
         level: dbPlayer.level, region: dbPlayer.region,
@@ -113,12 +94,56 @@ export async function getProfile(name: string, tag: string): Promise<ProfileResu
           peak: { tier: dbPlayer.tier, name: dbPlayer.tierName, iconUrl: dbPlayer.rankIconUrl },
         } : null,
       };
-      return { player: fp, matches: [], cached: true, stale: true, warning: "Veritabanından yüklendi." };
-    } else {
-      console.log(`[ApiGateway] DB'de bulunamadı: ${cleanName}#${cleanTag}`);
+
+      const result: ProfileResult = { player: fp, matches: [], cached: true, stale: false };
+      
+      const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+      const ageMs = Date.now() - dbPlayer.updatedAt.getTime();
+
+      if (ageMs < ONE_DAY_MS) {
+        // Data is fresh (< 24h)
+        cacheManagerSet(cacheKey, result, TTL_TABLE.profile).catch(console.error);
+        return result;
+      } else {
+        // Data is stale (> 24h). Trigger background fetch.
+        console.log(`[ApiGateway] SWR: Data for ${cleanName}#${cleanTag} is stale. Triggering background refresh...`);
+        result.stale = true;
+        result.warning = "Stale data. Refreshing in background...";
+        
+        // Fire and forget (Next.js serverless environment compatible)
+        fetchProfileDirect(cleanName, cleanTag)
+          .then(profile => {
+             cacheManagerSet(cacheKey, profile, TTL_TABLE.profile).catch(console.error);
+             upsertPlayerBackground(profile.player);
+          })
+          .catch(err => console.error("[ApiGateway] SWR Background fetch failed:", err.message));
+
+        // Populate Redis with stale data to avoid DB hammering
+        cacheManagerSet(cacheKey, result, TTL_TABLE.profile).catch(console.error);
+        return result;
+      }
     }
   } catch (dbErr) {
-    console.error("[ApiGateway] DB fallback hatası:", dbErr);
+    console.error("[ApiGateway] DB read error:", dbErr);
+  }
+
+  // 3. Not in DB at all (New Player) -> Fetch Live
+  let lastErr: unknown;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      console.log(`[ApiGateway] SWR: Missing in DB. Fetching live for ${cleanName}#${cleanTag}`);
+      const profile = await fetchProfileDirect(cleanName, cleanTag);
+      cacheManagerSet(cacheKey, profile, TTL_TABLE.profile).catch(console.error);
+      upsertPlayerBackground(profile.player);
+      return { ...profile, cached: false };
+    } catch (err) {
+      lastErr = err;
+      const status = (err as { response?: { status?: number } })?.response?.status;
+      console.error(`[ApiGateway] Deneme ${attempt + 1}/3 başarısız - ${cleanName}#${cleanTag}, Status: ${status}`);
+      if (status === 429 && attempt < 2) { await sleep(2000); continue; }
+      if (status === 500 && attempt < 1) { await sleep(1000); continue; }
+      break;
+    }
   }
 
   throw lastErr;

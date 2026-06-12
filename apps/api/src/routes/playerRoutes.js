@@ -17,6 +17,7 @@ import {
   getMatches,
   getStats,
   getFullProfile,
+  getPlayerProfile,
 } from "../controllers/playerController.js";
 
 const router = Router();
@@ -36,5 +37,9 @@ router.get("/:name/:tag/stats", getStats);
 // ── Full profile (combined) ────────────────────────────────────────────────
 // Convenience: profile + matches + stats in one round-trip.
 router.get("/:name/:tag/full", getFullProfile);
+
+// ── SWR Cached Profile ─────────────────────────────────────────────────────
+// Returns comprehensive profile using Stale-While-Revalidate caching.
+router.get("/:name/:tag/profile", getPlayerProfile);
 
 export default router;

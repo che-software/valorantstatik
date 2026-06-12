@@ -18,6 +18,8 @@ import { processLifetimeStats, calcTiltStats } from "./statsProcessor.js";
 import { Player } from "../models/Player.js";
 import { Match } from "../models/Match.js";
 import { CachedResponse } from "../models/CachedResponse.js";
+import { PlayerProfile } from "../models/PlayerProfile.js";
+import { syncPlayer } from "../services/syncService.js";
 
 // ── Cache TTL constants (seconds) ─────────────────────────────────────────────
 const TTL = {
@@ -313,3 +315,53 @@ export async function getFullProfile(req, res, next) {
     next(err);
   }
 }
+
+/**
+ * GET /api/v1/players/:name/:tag/profile
+ *
+ * Implements Stale-While-Revalidate pattern using PlayerProfile.
+ * - If not in DB: fetch live, save, return.
+ * - If in DB & <24h old: return DB instantly.
+ * - If in DB & >24h old: return DB instantly, trigger background sync.
+ *
+ * @type {import("express").RequestHandler}
+ */
+export async function getPlayerProfile(req, res, next) {
+  try {
+    const { name, tag } = validateRiotId(req.params.name, req.params.tag);
+    
+    // 1. Check DB
+    const dbProfile = await PlayerProfile.findOne({
+      gameName: new RegExp(`^${name}$`, "i"),
+      tagLine:  new RegExp(`^${tag}$`,  "i"),
+    }).lean();
+
+    const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+    const now = Date.now();
+
+    // 2. If missing, fetch, save, return
+    if (!dbProfile) {
+      console.log(`[PlayerCtrl] Profile missing in DB. Fetching live for ${name}#${tag}...`);
+      const newProfile = await syncPlayer(name, tag);
+      return res.json({ profile: newProfile, cached: false });
+    }
+
+    // 3. If present and <24h old, return instantly
+    const ageMs = now - new Date(dbProfile.lastUpdated).getTime();
+    if (ageMs < ONE_DAY_MS) {
+      console.log(`[PlayerCtrl] Serving fresh DB profile for ${name}#${tag}`);
+      return res.json({ profile: dbProfile, cached: true, stale: false });
+    }
+
+    // 4. If present and >24h old, return instantly but trigger background sync
+    console.log(`[PlayerCtrl] Serving stale DB profile for ${name}#${tag}. Triggering background sync...`);
+    // Fire and forget
+    syncPlayer(name, tag).catch(err => console.error("[PlayerCtrl] Background sync failed:", err.message));
+    
+    return res.json({ profile: dbProfile, cached: true, stale: true });
+
+  } catch (err) {
+    next(err);
+  }
+}
+

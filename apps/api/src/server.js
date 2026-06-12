@@ -14,12 +14,14 @@
 
 import { env }                from "./config/env.js";
 import { connectDatabase, disconnectDatabase } from "./config/database.js";
+import { initCronJobs }       from "./cron/cronJobs.js";
 import app                    from "./app.js";
 
 async function main() {
   // ── 1. Connect to MongoDB ─────────────────────────────────────────────────
   try {
     await connectDatabase();
+    initCronJobs();
   } catch (err) {
     console.error("[Server] Failed to connect to MongoDB:", err.message);
     // A broken DB at startup is unrecoverable — exit with a non-zero code so

@@ -2,6 +2,7 @@
 import SearchBar from "@/components/SearchBar";
 import { BarChart2, Shield, Trophy, Zap, Users, TrendingUp } from "lucide-react";
 import Link from "next/link";
+import SupportCard from "@/components/SupportCard";
 
 // ── Feature cards shown below the search bar ─────────────────────────────────
 const FEATURES = [
@@ -177,6 +178,11 @@ export default function HomePage() {
               {item.text}
             </span>
           ))}
+        </div>
+
+        {/* Support Card Row */}
+        <div className="mt-16 w-full max-w-4xl mx-auto">
+          <SupportCard />
         </div>
       </section>
     </main>

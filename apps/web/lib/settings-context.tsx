@@ -16,7 +16,7 @@ interface SettingsContextValue {
   t:           (key: string) => string;
 }
 
-const DEFAULTS: Settings = { language: "tr", theme: "dark" };
+const DEFAULTS: Settings = { language: "en", theme: "dark" };
 const STORAGE_KEY = "vt_settings";
 
 // ── Çeviri tablosu ────────────────────────────────────────────────────────────
@@ -145,7 +145,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   function setTheme(theme: Theme)          { save({ ...settings, theme });    }
 
   function t(key: string): string {
-    return TRANSLATIONS[settings.language]?.[key] ?? TRANSLATIONS.tr[key] ?? key;
+    return TRANSLATIONS[settings.language]?.[key] ?? TRANSLATIONS.en[key] ?? key;
   }
 
   return (

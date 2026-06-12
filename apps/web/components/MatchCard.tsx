@@ -275,7 +275,7 @@ export default function MatchCard({ match, playerName, playerTag }: MatchCardPro
                       <Link
                         key={p.puuid}
                         href={profileHref}
-                        onClick={e => e.stopPropagation()}
+                        onClick={(e: React.MouseEvent) => e.stopPropagation()}
                         className={`flex items-center gap-2 px-3 py-2 transition-colors group
                           ${isMe ? "bg-white/[0.05]" : "hover:bg-[#FF4655]/[0.06] cursor-pointer"}`}
                       >
@@ -323,7 +323,7 @@ export default function MatchCard({ match, playerName, playerTag }: MatchCardPro
           <div className="flex justify-end">
             <Link
               href={`/match/${match.matchId}`}
-              onClick={e => e.stopPropagation()}
+              onClick={(e: React.MouseEvent) => e.stopPropagation()}
               className="inline-flex items-center gap-1.5 text-[#FF4655] text-xs hover:underline"
             >
               <RefreshCw className="w-3 h-3" /> Tam Maç Detayı
